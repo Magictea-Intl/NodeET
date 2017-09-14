@@ -2,7 +2,7 @@
 
 NodeBB论坛的安卓客户端。
 
-可以在http://loveating.life/(需要翻墙)或者http://39.108.231.37/预览论坛。
+可以在http://loveating.life/ (需要翻墙) 或者 http://39.108.231.37/ 预览论坛。
 
 ## Todo
 
