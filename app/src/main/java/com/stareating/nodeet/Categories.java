@@ -13,6 +13,8 @@ public class Categories {
         int cid;
         String name;
         String description;
+        int topic_count;
+        int post_count;
 
     }
 

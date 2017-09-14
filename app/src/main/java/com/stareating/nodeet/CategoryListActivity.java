@@ -88,11 +88,14 @@ public class CategoryListActivity extends AppCompatActivity {
 
     private static class CategoryViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name;
+        TextView name, description, topic_count, post_count;
 
         CategoryViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.name);
+            description = (TextView) itemView.findViewById(R.id.description);
+            topic_count = (TextView) itemView.findViewById(R.id.topic_count);
+            post_count = (TextView) itemView.findViewById(R.id.post_count);
         }
     }
 
@@ -108,6 +111,9 @@ public class CategoryListActivity extends AppCompatActivity {
         public void onBindViewHolder(CategoryViewHolder holder, int position) {
             Categories.CategoryItem category = mCategories.get(position);
             holder.name.setText(category.name);
+            holder.description.setText(category.description);
+            holder.topic_count.setText(String.valueOf(category.topic_count));
+            holder.post_count.setText(String.valueOf(category.post_count));
         }
 
         @Override
