@@ -1,10 +1,15 @@
 package com.stareating.nodeet;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,14 +36,25 @@ public class CategoryListActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "CategoryListActivity";
 
+    private static Typeface TYPEFACE_ICON;
+
     private CategoryListAdapter mCategoryListAdapter = new CategoryListAdapter();
     private List<Categories.CategoryItem> mCategories = new ArrayList<>();
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initIconTypeFaceIfNeeded();
         setUpViews();
         fetchCategories();
+
+    }
+
+    private void initIconTypeFaceIfNeeded() {
+        if (TYPEFACE_ICON != null)
+            return;
+        TYPEFACE_ICON = Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");
     }
 
     private void fetchCategories() {
@@ -67,7 +83,7 @@ public class CategoryListActivity extends AppCompatActivity {
             Response response = mHttpClient.newCall(request).execute();
             Log.d(LOG_TAG, response.toString());
             ResponseBody body = response.body();
-            if(body == null)
+            if (body == null)
                 return;
             String json = body.string();
             Log.d(LOG_TAG, "body = " + json);
@@ -81,14 +97,18 @@ public class CategoryListActivity extends AppCompatActivity {
 
     private void setUpViews() {
         setContentView(R.layout.activity_category_list);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         RecyclerView categoryListView = (RecyclerView) findViewById(R.id.category_list);
         categoryListView.setLayoutManager(new LinearLayoutManager(this));
         categoryListView.setAdapter(mCategoryListAdapter);
     }
 
-    private static class CategoryViewHolder extends RecyclerView.ViewHolder {
+    private class CategoryViewHolder extends RecyclerView.ViewHolder {
 
         TextView name, description, topic_count, post_count;
+        TextView icon;
+        GradientDrawable iconBackground;
 
         CategoryViewHolder(View itemView) {
             super(itemView);
@@ -96,6 +116,18 @@ public class CategoryListActivity extends AppCompatActivity {
             description = (TextView) itemView.findViewById(R.id.description);
             topic_count = (TextView) itemView.findViewById(R.id.topic_count);
             post_count = (TextView) itemView.findViewById(R.id.post_count);
+            icon = (TextView) itemView.findViewById(R.id.icon);
+            icon.setTypeface(TYPEFACE_ICON);
+            iconBackground = (GradientDrawable) icon.getBackground();
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition();
+                    Categories.CategoryItem item = mCategories.get(pos);
+                    // TODO: 2017/9/14 跳转到PostListActivity
+                    startActivity(new Intent(CategoryListActivity.this, PostListActivity.class));
+                }
+            });
         }
     }
 
@@ -114,12 +146,21 @@ public class CategoryListActivity extends AppCompatActivity {
             holder.description.setText(category.description);
             holder.topic_count.setText(String.valueOf(category.topic_count));
             holder.post_count.setText(String.valueOf(category.post_count));
+            holder.iconBackground.setColor(Color.parseColor(category.bgColor));
+            holder.icon.setText(getCharForFontAwesome(category.icon));
         }
 
         @Override
         public int getItemCount() {
             return mCategories == null ? 0 : mCategories.size();
         }
+    }
+
+    private String getCharForFontAwesome(String icon) {
+        int resId = getResources().getIdentifier(icon.replace('-', '_'), "string", getPackageName());
+        if (resId == 0)
+            return "";
+        return getString(resId);
     }
 
 }

@@ -3,26 +3,41 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="horizontal">
+              android:orientation="horizontal"
+              android:padding="8dp">
+
+    <TextView
+        android:id="@+id/icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/category_icon_bg"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="#ffffff"
+        tools:text="A"/>
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
         android:layout_weight="6"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
+            android:layout_marginTop="8dp"
             android:textColor="#6BA4C6"
             android:textSize="16sp"
             tools:text="啦啦啦"/>
+
         <TextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
             android:textColor="#B3B6BF"
             android:textSize="8sp"
             tools:text="description"/>
@@ -34,21 +49,27 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/topic_count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:paddingTop="8dp"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             tools:text="3"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="2dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="主题"
             android:textColor="#B3B6BF"
-            android:textSize="10sp"
-            android:text="主题"/>
+            android:textSize="12sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -56,21 +77,27 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/post_count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:paddingTop="8dp"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             tools:text="11"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="帖子"
             android:textColor="#B3B6BF"
-            android:textSize="10sp"
-            android:text="帖子"/>
+            android:textSize="12sp"/>
     </LinearLayout>
 
 </LinearLayout>
