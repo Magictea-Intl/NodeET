@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="horizontal"
+              android:padding="8dp">
+
+    <TextView
+        android:id="@+id/icon_item_post"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/category_icon_bg"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="#ffffff"
+        tools:text="A"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_weight="6"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            tools:text="啦啦啦"/>
+
+        <TextView
+            android:id="@+id/description_item_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:textColor="#B3B6BF"
+            android:textSize="12sp"
+            tools:text="公告 + 。。。"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/post_count_item_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            tools:text="11"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="帖子"
+            android:textColor="#B3B6BF"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/view_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            tools:text="3"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="浏览"
+            android:textColor="#B3B6BF"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+
+</LinearLayout>

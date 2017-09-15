@@ -28,6 +28,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+import static com.stareating.nodeet.PostListActivity.CATEGORY_ID;
+import static com.stareating.nodeet.PostListActivity.CATEGORY_NAME;
+
 /**
  * Created by Stardust on 2017/9/14.
  */
@@ -125,7 +128,9 @@ public class CategoryListActivity extends AppCompatActivity {
                     int pos = getAdapterPosition();
                     Categories.CategoryItem item = mCategories.get(pos);
                     // TODO: 2017/9/14 跳转到PostListActivity
-                    startActivity(new Intent(CategoryListActivity.this, PostListActivity.class));
+                    startActivity(new Intent(CategoryListActivity.this, PostListActivity.class)
+                    .putExtra(CATEGORY_ID, pos + 1)
+                    .putExtra(CATEGORY_NAME, item.name));
                 }
             });
         }
