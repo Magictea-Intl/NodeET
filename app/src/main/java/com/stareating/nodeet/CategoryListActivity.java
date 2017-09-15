@@ -125,12 +125,12 @@ public class CategoryListActivity extends AppCompatActivity {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // FIXME: 2017/9/16 cid可不一定等于pos + 1哦
                     int pos = getAdapterPosition();
                     Categories.CategoryItem item = mCategories.get(pos);
-                    // TODO: 2017/9/14 跳转到PostListActivity
                     startActivity(new Intent(CategoryListActivity.this, PostListActivity.class)
-                    .putExtra(CATEGORY_ID, pos + 1)
-                    .putExtra(CATEGORY_NAME, item.name));
+                            .putExtra(CATEGORY_ID, pos + 1)
+                            .putExtra(CATEGORY_NAME, item.name));
                 }
             });
         }

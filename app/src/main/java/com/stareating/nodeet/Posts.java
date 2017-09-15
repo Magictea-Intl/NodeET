@@ -8,14 +8,15 @@ import java.util.List;
 
 public class Posts {
 
-    public static class PostItem{
+    public static class PostItem {
         int tid;
         int uid;
         int pid;
         String title;
         int viewcount;
         int postcount;
-        String time_stamp_ISO;
+        long timestamp;
+        boolean deleted;
     }
 
     List<PostItem> topics;

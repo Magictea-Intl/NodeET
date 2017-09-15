@@ -17,7 +17,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -32,10 +36,11 @@ import okhttp3.ResponseBody;
 
 public class PostListActivity extends AppCompatActivity {
 
-    //如何获取帖子列表：访问 http://39.108.231.37/api/category/cid/posts
+    //如何获取帖子列表：访问 http://39.108.231.37/api/category/cid
     //其中cid是对应板块的id
 
     private static final String LOG_TAG = "PostListActivity";
+    private static final DateFormat DATE_FORMAT = SimpleDateFormat.getDateTimeInstance();
     public static final String CATEGORY_ID = "categoryId";
     public static final String CATEGORY_NAME = "categoryName";
     private PostListAdapter mPostListAdapter = new PostListAdapter();
@@ -65,14 +70,14 @@ public class PostListActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void doFetchPosts(){
+    private void doFetchPosts() {
         cid = getIntent().getIntExtra(CATEGORY_ID, -1);
         categoryName = getIntent().getStringExtra(CATEGORY_NAME);
         Log.d(LOG_TAG, "cid = " + cid + ", category = " + categoryName);
         try {
             OkHttpClient mHttpClient = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("http://39.108.231.37/api/category/" + String.valueOf(cid) + "/posts")
+                    .url("http://39.108.231.37/api/category/" + String.valueOf(cid))
                     .build();
             Response response = mHttpClient.newCall(request).execute();
             Log.d(LOG_TAG, response.toString());
@@ -81,10 +86,21 @@ public class PostListActivity extends AppCompatActivity {
                 return;
             String json = body.string();
             Log.d(LOG_TAG, "body = " + json);
-            Posts posts = new Gson().fromJson(json, new TypeToken<Posts>(){}.getType());
+            Posts posts = new Gson().fromJson(json, new TypeToken<Posts>() {
+            }.getType());
             mPosts = posts.getPostItems();
+            removeDeletedPosts();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void removeDeletedPosts() {
+        Iterator<Posts.PostItem> iterator = mPosts.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().deleted) {
+                iterator.remove();
+            }
         }
     }
 
@@ -109,7 +125,7 @@ public class PostListActivity extends AppCompatActivity {
         });
     }
 
-    private class PostViewHolder extends RecyclerView.ViewHolder{
+    private class PostViewHolder extends RecyclerView.ViewHolder {
 
         TextView title, view_count, post_count, description;
 
@@ -123,7 +139,7 @@ public class PostListActivity extends AppCompatActivity {
         }
     }
 
-    private class PostListAdapter extends RecyclerView.Adapter<PostViewHolder>{
+    private class PostListAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
         @Override
         public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -134,15 +150,8 @@ public class PostListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(PostViewHolder holder, int position) {
             Posts.PostItem postItem = mPosts.get(position);
-            if(postItem.title.equals("[[topic:topic_is_deleted]]")){
-                holder.title.setText("此主题已被删除！");
-                holder.title.setTextColor(Color.GRAY);
-                holder.view_count.setTextColor(Color.GRAY);
-                holder.post_count.setTextColor(Color.GRAY);
-            }
-            else holder.title.setText(postItem.title);
-            Log.d(LOG_TAG, "title = " + postItem.title);
-            holder.description.setText(categoryName + "·" + postItem.time_stamp_ISO);
+            holder.title.setText(postItem.title);
+            holder.description.setText(categoryName + "·" + DATE_FORMAT.format(new Date(postItem.timestamp)));
             holder.view_count.setText(String.valueOf(postItem.viewcount));
             holder.post_count.setText(String.valueOf(postItem.postcount));
         }
