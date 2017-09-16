@@ -57,9 +57,9 @@ public class MainActivity extends AppCompatActivity {
                     case 0:
                         return new CategoryListFragment();
                     case 1:
-                        return new LastestPostFragment();
+                        return PostListFragment.newInstance("http://www.autojs.org/api/recent");
                     case 2:
-                        return new HotestPostFragment();
+                        return PostListFragment.newInstance("http://www.autojs.org/api/popular");
                     default:
                         throw new IllegalArgumentException();
                 }

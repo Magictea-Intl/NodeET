@@ -13,8 +13,8 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/post_list"
+    <FrameLayout
+        android:id="@+id/fragment_post_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
