@@ -43,7 +43,7 @@ public class DrawerFragment extends Fragment {
         view.findViewById(R.id.header).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 2017/9/16 让用户设置背景图片 
+                // TODO: 2017/9/16 让用户设置背景图片
             }
         });
 
