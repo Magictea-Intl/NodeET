@@ -6,6 +6,9 @@ import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +46,7 @@ public class CategoryListActivity extends AppCompatActivity {
 
     private CategoryListAdapter mCategoryListAdapter = new CategoryListAdapter();
     private List<Categories.CategoryItem> mCategories = new ArrayList<>();
+    private TabLayout mTabLayout;
 
 
     @Override
@@ -100,11 +104,29 @@ public class CategoryListActivity extends AppCompatActivity {
 
     private void setUpViews() {
         setContentView(R.layout.activity_category_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setUpToolbarWithDrawerLayout();
+        setUpTabLayout();
+        setUpCategoryList();
+    }
+
+    private void setUpCategoryList() {
         RecyclerView categoryListView = (RecyclerView) findViewById(R.id.category_list);
         categoryListView.setLayoutManager(new LinearLayoutManager(this));
         categoryListView.setAdapter(mCategoryListAdapter);
+    }
+
+    private void setUpTabLayout() {
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        // TODO: 2017/9/16
+    }
+
+    private void setUpToolbarWithDrawerLayout() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
+        toggle.syncState();
+        drawerLayout.addDrawerListener(toggle);
     }
 
     private class CategoryViewHolder extends RecyclerView.ViewHolder {

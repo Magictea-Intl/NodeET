@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NodeET</string>
+    <string name="open_drawer">打开侧拉菜单</string>
+    <string name="close_drawer">关闭侧拉菜单</string>
 </resources>
