@@ -17,6 +17,7 @@ public class Posts {
         int postcount;
         long timestamp;
         boolean deleted;
+        User user;
     }
 
     List<PostItem> topics;

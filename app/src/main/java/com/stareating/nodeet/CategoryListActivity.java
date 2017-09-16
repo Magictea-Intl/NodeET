@@ -39,7 +39,7 @@ public class CategoryListActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "CategoryListActivity";
 
-    private static Typeface TYPEFACE_ICON;
+    static Typeface TYPEFACE_ICON;
 
     private CategoryListAdapter mCategoryListAdapter = new CategoryListAdapter();
     private List<Categories.CategoryItem> mCategories = new ArrayList<>();
@@ -81,7 +81,7 @@ public class CategoryListActivity extends AppCompatActivity {
         try {
             OkHttpClient mHttpClient = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("http://39.108.231.37/api/categories")
+                    .url("http://www.autojs.org/api/categories")
                     .build();
             Response response = mHttpClient.newCall(request).execute();
             Log.d(LOG_TAG, response.toString());
