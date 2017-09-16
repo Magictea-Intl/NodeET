@@ -8,8 +8,8 @@
 * [x] 显示板块图标 - Stardust
 * [x] 点击板块后，获取到板块的主题列表(包括浏览数、帖子数)并显示 - Kikyo
 * [x] 增加侧拉菜单, 上方头像、背景, 下方设置、退出 - Stardust
-* [ ] 增加TabLayout, 各个Tab为"版块", "最新", "热门"  - Kikyo
-* [ ] 完成"最新", "热门"的Tab对应的内容   - Stardust
+* [x] 增加TabLayout, 各个Tab为"版块", "最新", "热门"  - Kikyo
+* [x] 完成"最新", "热门"的Tab对应的内容   - Stardust
 * [ ] 界面优化: 使界面更加美观 - Stardust
 
 ## Refactor1
