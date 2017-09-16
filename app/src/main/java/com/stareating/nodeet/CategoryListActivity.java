@@ -1,5 +1,7 @@
 package com.stareating.nodeet;
 
+import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -7,6 +9,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -117,7 +121,9 @@ public class CategoryListActivity extends AppCompatActivity {
 
     private void setUpTabLayout() {
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        // TODO: 2017/9/16
+        mTabLayout.addTab(mTabLayout.newTab().setText("版块"));
+        mTabLayout.addTab(mTabLayout.newTab().setText("最新"));
+        mTabLayout.addTab(mTabLayout.newTab().setText("热门"));
     }
 
     private void setUpToolbarWithDrawerLayout() {
@@ -128,6 +134,7 @@ public class CategoryListActivity extends AppCompatActivity {
         toggle.syncState();
         drawerLayout.addDrawerListener(toggle);
     }
+
 
     private class CategoryViewHolder extends RecyclerView.ViewHolder {
 
