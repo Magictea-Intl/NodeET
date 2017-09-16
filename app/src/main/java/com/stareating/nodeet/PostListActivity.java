@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -146,7 +145,7 @@ public class PostListActivity extends AppCompatActivity {
             post_count = (TextView) itemView.findViewById(R.id.post_count_item_post);
             description = (TextView) itemView.findViewById(R.id.description_item_post);
             iconText = (TextView) itemView.findViewById(R.id.icon_text);
-            iconText.setTypeface(CategoryListActivity.TYPEFACE_ICON);
+            iconText.setTypeface(CategoryListFragment.TYPEFACE_ICON);
             iconTextBackground = (GradientDrawable) iconText.getBackground();
             icon = (RoundedImageView) itemView.findViewById(R.id.icon);
         }

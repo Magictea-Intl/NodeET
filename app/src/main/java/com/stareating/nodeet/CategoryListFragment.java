@@ -1,22 +1,14 @@
 package com.stareating.nodeet;
 
-import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,33 +31,37 @@ import static com.stareating.nodeet.PostListActivity.CATEGORY_ID;
 import static com.stareating.nodeet.PostListActivity.CATEGORY_NAME;
 
 /**
- * Created by Stardust on 2017/9/14.
+ * Created by Stardust on 2017/9/16.
  */
+public class CategoryListFragment extends Fragment {
 
-public class CategoryListActivity extends AppCompatActivity {
-
-    private static final String LOG_TAG = "CategoryListActivity";
-
+    private static final String LOG_TAG = "CategoryListFragment";
     static Typeface TYPEFACE_ICON;
 
     private CategoryListAdapter mCategoryListAdapter = new CategoryListAdapter();
     private List<Categories.CategoryItem> mCategories = new ArrayList<>();
-    private TabLayout mTabLayout;
 
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_category_list, container, false);
+    }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         initIconTypeFaceIfNeeded();
-        setUpViews();
+        setUpCategoryList(view);
         fetchCategories();
 
     }
 
+
     private void initIconTypeFaceIfNeeded() {
         if (TYPEFACE_ICON != null)
             return;
-        TYPEFACE_ICON = Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");
+        TYPEFACE_ICON = Typeface.createFromAsset(getActivity().getAssets(), "fonts/fontawesome-webfont.ttf");
     }
 
     private void fetchCategories() {
@@ -74,7 +70,7 @@ public class CategoryListActivity extends AppCompatActivity {
             @Override
             public void run() {
                 doFetchingCategories();
-                runOnUiThread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mCategoryListAdapter.notifyDataSetChanged();
@@ -84,6 +80,7 @@ public class CategoryListActivity extends AppCompatActivity {
 
         }).start();
     }
+
 
     private void doFetchingCategories() {
         try {
@@ -106,33 +103,11 @@ public class CategoryListActivity extends AppCompatActivity {
         }
     }
 
-    private void setUpViews() {
-        setContentView(R.layout.activity_category_list);
-        setUpToolbarWithDrawerLayout();
-        setUpTabLayout();
-        setUpCategoryList();
-    }
 
-    private void setUpCategoryList() {
-        RecyclerView categoryListView = (RecyclerView) findViewById(R.id.category_list);
-        categoryListView.setLayoutManager(new LinearLayoutManager(this));
+    private void setUpCategoryList(View view) {
+        RecyclerView categoryListView = (RecyclerView) view.findViewById(R.id.category_list);
+        categoryListView.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoryListView.setAdapter(mCategoryListAdapter);
-    }
-
-    private void setUpTabLayout() {
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        mTabLayout.addTab(mTabLayout.newTab().setText("版块"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("最新"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("热门"));
-    }
-
-    private void setUpToolbarWithDrawerLayout() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
-        toggle.syncState();
-        drawerLayout.addDrawerListener(toggle);
     }
 
 
@@ -157,7 +132,7 @@ public class CategoryListActivity extends AppCompatActivity {
                     // FIXME: 2017/9/16 cid可不一定等于pos + 1哦
                     int pos = getAdapterPosition();
                     Categories.CategoryItem item = mCategories.get(pos);
-                    startActivity(new Intent(CategoryListActivity.this, PostListActivity.class)
+                    startActivity(new Intent(getActivity(), PostListActivity.class)
                             .putExtra(CATEGORY_ID, pos + 1)
                             .putExtra(CATEGORY_NAME, item.name));
                 }
@@ -191,7 +166,7 @@ public class CategoryListActivity extends AppCompatActivity {
     }
 
     private String getCharForFontAwesome(String icon) {
-        int resId = getResources().getIdentifier(icon.replace('-', '_'), "string", getPackageName());
+        int resId = getResources().getIdentifier(icon.replace('-', '_'), "string", getActivity().getPackageName());
         if (resId == 0)
             return "";
         return getString(resId);
