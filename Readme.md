@@ -2,7 +2,7 @@
 
 NodeBB论坛的安卓客户端。
 
-可以在 http://39.108.231.37/ 预览论坛。
+可以在 http:/www.autojs.org/ 预览论坛。
 
 ## Todo
 
