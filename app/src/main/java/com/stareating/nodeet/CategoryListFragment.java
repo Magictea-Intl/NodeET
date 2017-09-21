@@ -129,11 +129,11 @@ public class CategoryListFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // FIXME: 2017/9/16 cid可不一定等于pos + 1哦
+
                     int pos = getAdapterPosition();
                     Categories.CategoryItem item = mCategories.get(pos);
                     startActivity(new Intent(getActivity(), PostListActivity.class)
-                            .putExtra(CATEGORY_ID, pos + 1)
+                            .putExtra(CATEGORY_ID, item.cid)
                             .putExtra(CATEGORY_NAME, item.name));
                 }
             });

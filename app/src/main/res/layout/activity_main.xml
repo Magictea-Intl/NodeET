@@ -26,6 +26,7 @@
                 android:layout_height="wrap_content"/>
         </android.support.design.widget.AppBarLayout>
 
+        <!-- 这里由一个ViewPager。是一个能左右滑动切换页面的控件（一般可以用于轮播展示页之类的，比如几个广告一翻的那种,像刚刚那种)-->
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"

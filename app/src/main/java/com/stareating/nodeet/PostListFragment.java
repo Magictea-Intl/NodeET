@@ -56,6 +56,7 @@ public class PostListFragment extends Fragment {
         PostListFragment fragment = new PostListFragment();
         Bundle arg = new Bundle();
         arg.putString(URL, url);
+        //用setArguments设置参数~
         fragment.setArguments(arg);
         return fragment;
     }
@@ -63,6 +64,7 @@ public class PostListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //获取~
         mUrl = getArguments().getString(URL);
     }
 
