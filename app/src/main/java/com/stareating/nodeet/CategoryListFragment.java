@@ -83,6 +83,18 @@ public class CategoryListFragment extends Fragment {
     private void fetchCategories() {
         //网络访问等耗时操作不能在主线程(UI线程)中执行，否则会造成界面卡顿。
         //这里直接让他返回一个Call，然后会有一个获取的回调。这样的话这个Call会异步执行并在获取后执行回调。就不用开线程。
+        //其实这里的Call也可以直接和之前那样执行execute。只不过这样的话就是同步执行的，需要开新线程。
+
+        /*
+        retrofit2.Response<Categories> response = mRetrofit.create(CategoryApi.class)
+                .getCategories()
+                .execute();
+        //这样和之前newCall().execute是一样的，只不过，之前要自己用Gson把他解析成对象。
+        //而现在就不用了会自动解析。
+        //现在是调用enqueue的话就会有一个回调函数会在请求执行完成后被调用并把结果传递到函数参数、
+        //这样就是异步的了（enqueue函数会自动创建新线程来完成，并在获取结果后切换回主线程执行回调函数）
+         */
+
         mRetrofit.create(CategoryApi.class)
                 .getCategories()
                 .enqueue(new Callback<Categories>() {
