@@ -14,18 +14,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.stareating.nodeet.network.NodeBBService;
+import com.stareating.nodeet.network.api.CategoryApi;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.stareating.nodeet.PostListActivity.CATEGORY_ID;
 import static com.stareating.nodeet.PostListActivity.CATEGORY_NAME;
@@ -40,7 +50,13 @@ public class CategoryListFragment extends Fragment {
 
     private CategoryListAdapter mCategoryListAdapter = new CategoryListAdapter();
     private List<Categories.CategoryItem> mCategories = new ArrayList<>();
+    private Retrofit mRetrofit = NodeBBService.getInstance().getRetrofit();
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Nullable
     @Override
@@ -65,42 +81,24 @@ public class CategoryListFragment extends Fragment {
     }
 
     private void fetchCategories() {
-        //网络访问等耗时操作不能在主线程(UI线程)中执行，否则会造成界面卡顿
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                doFetchingCategories();
-                getActivity().runOnUiThread(new Runnable() {
+        //网络访问等耗时操作不能在主线程(UI线程)中执行，否则会造成界面卡顿。
+        //这里直接让他返回一个Call，然后会有一个获取的回调。这样的话这个Call会异步执行并在获取后执行回调。就不用开线程。
+        mRetrofit.create(CategoryApi.class)
+                .getCategories()
+                .enqueue(new Callback<Categories>() {
                     @Override
-                    public void run() {
+                    public void onResponse(Call<Categories> call, retrofit2.Response<Categories> response) {
+                        mCategories = response.body().getCategoryItems();
                         mCategoryListAdapter.notifyDataSetChanged();
                     }
+
+                    @Override
+                    public void onFailure(Call<Categories> call, Throwable t) {
+                        Toast.makeText(getContext(), R.string.fetch_failed, Toast.LENGTH_SHORT).show();
+                        t.printStackTrace();
+                    }
+
                 });
-            }
-
-        }).start();
-    }
-
-
-    private void doFetchingCategories() {
-        try {
-            OkHttpClient mHttpClient = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url("http://www.autojs.org/api/categories")
-                    .build();
-            Response response = mHttpClient.newCall(request).execute();
-            Log.d(LOG_TAG, response.toString());
-            ResponseBody body = response.body();
-            if (body == null)
-                return;
-            String json = body.string();
-            Log.d(LOG_TAG, "body = " + json);
-            Categories categories = new Gson().fromJson(json, new TypeToken<Categories>() {
-            }.getType());
-            mCategories = categories.getCategoryItems();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -111,32 +109,42 @@ public class CategoryListFragment extends Fragment {
     }
 
 
-    private class CategoryViewHolder extends RecyclerView.ViewHolder {
+    //这个ViewHolder的代码看起来就很烦了，一堆的findViewById(还容易忘了加itemView造成蜜汁Bug。）以及冗长的setOnClickListener
+    //emmmm 这样子看起来就比较干净一点点啦 更关键的是，维护起来更让人舒心一点
+    class CategoryViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name, description, topic_count, post_count;
+        @BindView(R.id.name)
+        TextView name;
+
+        @BindView(R.id.description)
+        TextView description;
+
+        @BindView(R.id.topic_count)
+        TextView topic_count;
+
+        @BindView(R.id.post_count)
+        TextView post_count;
+
+        @BindView(R.id.icon)
         TextView icon;
+
         GradientDrawable iconBackground;
 
         CategoryViewHolder(View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.name);
-            description = (TextView) itemView.findViewById(R.id.description);
-            topic_count = (TextView) itemView.findViewById(R.id.topic_count);
-            post_count = (TextView) itemView.findViewById(R.id.post_count);
-            icon = (TextView) itemView.findViewById(R.id.icon);
+            //第一次参数是注解所在的对象。第二个参数是View。
+            ButterKnife.bind(this, itemView);
             icon.setTypeface(TYPEFACE_ICON);
             iconBackground = (GradientDrawable) icon.getBackground();
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        }
 
-                    int pos = getAdapterPosition();
-                    Categories.CategoryItem item = mCategories.get(pos);
-                    startActivity(new Intent(getActivity(), PostListActivity.class)
-                            .putExtra(CATEGORY_ID, item.cid)
-                            .putExtra(CATEGORY_NAME, item.name));
-                }
-            });
+        @OnClick(R.id.item)
+        void showCategoryContent() {
+            int pos = getAdapterPosition();
+            Categories.CategoryItem item = mCategories.get(pos);
+            startActivity(new Intent(getActivity(), PostListActivity.class)
+                    .putExtra(CATEGORY_ID, item.cid)
+                    .putExtra(CATEGORY_NAME, item.name));
         }
     }
 

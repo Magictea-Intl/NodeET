@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private static final String LOG_TAG = "MainActivity";
 
     private TabLayout mTabLayout;
@@ -61,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
                     case 0:
                         return new CategoryListFragment();
                     case 1:
-                        return PostListFragment.newInstance("http://www.autojs.org/api/recent");
+                        return new RecentFragment();
                     case 2:
-                        return PostListFragment.newInstance("http://www.autojs.org/api/popular");
+                        return new PopularFragment();
                     default:
                         throw new IllegalArgumentException();
                 }

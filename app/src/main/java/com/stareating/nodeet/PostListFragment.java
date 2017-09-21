@@ -8,17 +8,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.stareating.nodeet.network.NodeBBService;
+import com.stareating.nodeet.network.api.PostApi;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,9 +36,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-
-import static com.stareating.nodeet.PostListActivity.CATEGORY_ID;
-import static com.stareating.nodeet.PostListActivity.CATEGORY_NAME;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * Created by Stardust on 2017/9/16.
@@ -47,25 +48,31 @@ public class PostListFragment extends Fragment {
     private static final String LOG_TAG = "PostListActivity";
     private static final DateFormat DATE_FORMAT = SimpleDateFormat.getDateTimeInstance();
 
-    public static final String URL = "url";
     private PostListAdapter mPostListAdapter = new PostListAdapter();
-    private List<Posts.PostItem> mPosts = new ArrayList<>();
-    private String mUrl;
 
-    public static PostListFragment newInstance(String url) {
+    private List<Posts.PostItem> mPosts = new ArrayList<>();
+    private String mCid;
+
+    //注意现在我们的PostListFragment只能用于板块的帖子显示，不能再显示最新和最热了。
+    //但是如果最新和最热都要重复写一个完整的这个类出来也不现实。一种方案是继承。
+    //这样的话就要在这个类留一些方法给他们重写以便可以调用不同的Api显示帖子列表
+    public static PostListFragment newInstance(String cid) {
         PostListFragment fragment = new PostListFragment();
         Bundle arg = new Bundle();
-        arg.putString(URL, url);
-        //用setArguments设置参数~
+        arg.putString("cid", cid);
         fragment.setArguments(arg);
         return fragment;
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //获取~
-        mUrl = getArguments().getString(URL);
+        Bundle arg = getArguments();
+        if (arg == null)
+            return;
+        mCid = arg.getString("cid");
     }
 
     @Nullable
@@ -81,41 +88,29 @@ public class PostListFragment extends Fragment {
         fetchPosts();
     }
 
-    private void fetchPosts() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                doFetchPosts();
-                getActivity().runOnUiThread(new Runnable() {
+    protected void fetchPosts() {
+        NodeBBService.getInstance().getRetrofit()
+                .create(PostApi.class)
+                .getPostsForCategory(mCid)
+                .enqueue(new Callback<Posts>() {
                     @Override
-                    public void run() {
-                        mPostListAdapter.notifyDataSetChanged();
+                    public void onResponse(Call<Posts> call, retrofit2.Response<Posts> response) {
+                        setPosts(response.body().getPostItems());
+                    }
+
+                    @Override
+                    public void onFailure(Call<Posts> call, Throwable t) {
+                        t.printStackTrace();
+                        Toast.makeText(getContext(), R.string.fetch_failed, Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
-        }).start();
+
     }
 
-    private void doFetchPosts() {
-        try {
-            OkHttpClient mHttpClient = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(mUrl)
-                    .build();
-            Response response = mHttpClient.newCall(request).execute();
-            Log.d(LOG_TAG, response.toString());
-            ResponseBody body = response.body();
-            if (body == null)
-                return;
-            String json = body.string();
-            Log.d(LOG_TAG, "body = " + json);
-            Posts posts = new Gson().fromJson(json, new TypeToken<Posts>() {
-            }.getType());
-            mPosts = posts.getPostItems();
-            removeDeletedPosts();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    protected void setPosts(List<Posts.PostItem> posts) {
+        mPosts = posts;
+        removeDeletedPosts();
+        mPostListAdapter.notifyDataSetChanged();
     }
 
     private void removeDeletedPosts() {

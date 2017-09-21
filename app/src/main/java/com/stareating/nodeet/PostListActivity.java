@@ -28,7 +28,7 @@ public class PostListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post_list);
         setUpToolbar();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_post_list, PostListFragment.newInstance("http://www.autojs.org/api/category/" + cid))
+                .replace(R.id.fragment_post_list, PostListFragment.newInstance(String.valueOf(cid)))
                 .commit();
     }
 
