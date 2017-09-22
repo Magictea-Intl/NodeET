@@ -38,10 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpTabLayout() {
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        //我们是用ViewPager和TabLayout一起滑动，來实现翻动Tab時會显示不同的画面。
+
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         final String[] titles = {"版块", "最新", "热门"};
-        //这里设置了一个Adapter，用于指定对应位置显示的Fragment。看一下函数名应该就都知道是什么意思了
+
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
 
             @Override
@@ -54,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
                 return 3;
             }
 
-            //这里由一个问题是。我们的最新和最热的页面本质上都是一个帖子列表，只是获取帖子的地址不同而已。
-            //这样的話我们可以用同一个的Fragment但传进去不同的参数（地址）来实现。
             @Override
             public Fragment getItem(int position) {
                 switch (position) {
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        //然后调用setupWithViewPager就ok
+
         mTabLayout.setupWithViewPager(viewPager);
     }
 

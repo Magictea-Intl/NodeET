@@ -13,7 +13,7 @@ import org.androidannotations.annotations.EFragment;
 /**
  * Created by Stardust on 2017/9/16.
  */
-//以这个Fragment为例子。使用AA框架的Fragment或者Activity都需要用EFragment或EActivity指定布局。
+//使用AA框架的Fragment或者Activity都需要用EFragment或EActivity指定布局。
 //在使用有AA的Fragment都要加下划线
 @EFragment(R.layout.fragment_drawer)
 public class DrawerFragment extends Fragment {

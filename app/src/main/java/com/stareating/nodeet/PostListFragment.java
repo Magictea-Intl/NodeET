@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -53,9 +55,6 @@ public class PostListFragment extends Fragment {
     private List<Posts.PostItem> mPosts = new ArrayList<>();
     private String mCid;
 
-    //注意现在我们的PostListFragment只能用于板块的帖子显示，不能再显示最新和最热了。
-    //但是如果最新和最热都要重复写一个完整的这个类出来也不现实。一种方案是继承。
-    //这样的话就要在这个类留一些方法给他们重写以便可以调用不同的Api显示帖子列表
     public static PostListFragment newInstance(String cid) {
         PostListFragment fragment = new PostListFragment();
         Bundle arg = new Bundle();
@@ -68,7 +67,7 @@ public class PostListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //获取~
+
         Bundle arg = getArguments();
         if (arg == null)
             return;
@@ -129,20 +128,31 @@ public class PostListFragment extends Fragment {
     }
 
 
-    private class PostViewHolder extends RecyclerView.ViewHolder {
+    class PostViewHolder extends RecyclerView.ViewHolder {
 
-        TextView title, view_count, post_count, description, iconText;
+        @BindView(R.id.title)
+        TextView title;
+
+        @BindView(R.id.view_count)
+        TextView view_count;
+
+        @BindView(R.id.post_count_item_post)
+        TextView post_count;
+
+        @BindView(R.id.description_item_post)
+        TextView description;
+
+        @BindView(R.id.icon_text)
+        TextView iconText;
+
         RoundedImageView icon;
         GradientDrawable iconTextBackground;
 
 
         public PostViewHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.title);
-            view_count = (TextView) itemView.findViewById(R.id.view_count);
-            post_count = (TextView) itemView.findViewById(R.id.post_count_item_post);
-            description = (TextView) itemView.findViewById(R.id.description_item_post);
-            iconText = (TextView) itemView.findViewById(R.id.icon_text);
+
+            ButterKnife.bind(this, itemView);
             iconText.setTypeface(CategoryListFragment.TYPEFACE_ICON);
             iconTextBackground = (GradientDrawable) iconText.getBackground();
             icon = (RoundedImageView) itemView.findViewById(R.id.icon);
@@ -164,12 +174,14 @@ public class PostListFragment extends Fragment {
             holder.description.setText(DATE_FORMAT.format(new Date(postItem.timestamp)));
             holder.view_count.setText(String.valueOf(postItem.viewcount));
             holder.post_count.setText(String.valueOf(postItem.postcount));
+
             if (TextUtils.isEmpty(postItem.user.picture)) {
                 holder.icon.setVisibility(View.GONE);
                 holder.iconText.setVisibility(View.VISIBLE);
                 holder.iconTextBackground.setColor(Color.parseColor(postItem.user.iconBgColor));
                 holder.iconText.setText(postItem.user.iconText);
-            } else {
+            }
+            else {
                 holder.icon.setVisibility(View.VISIBLE);
                 holder.iconText.setVisibility(View.GONE);
                 new Thread(new Runnable() {
