@@ -7,31 +7,11 @@
               android:orientation="horizontal"
               android:padding="8dp">
 
-    <FrameLayout
+    <!-- 这一部分是显示用户头像的地方 -->
+    <com.stareating.nodeet.ui.common.AvatarView
+        android:id="@+id/avatar"
         android:layout_width="50dp"
-        android:layout_height="50dp">
-
-        <TextView
-            android:id="@+id/icon_text"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/category_icon_bg"
-            android:gravity="center"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            tools:text="A"/>
-
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/icon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="fitCenter"
-            android:visibility="gone"
-            app:riv_corner_radius="25dp"
-            app:riv_mutate_background="true"
-            app:riv_oval="true"/>
-
-    </FrameLayout>
+        android:layout_height="50dp"/>
 
 
     <LinearLayout
@@ -85,7 +65,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="4dp"
             android:gravity="center"
-            android:text="帖子"
+            android:text="@string/post"
             android:textColor="#B3B6BF"
             android:textSize="12sp"/>
     </LinearLayout>
@@ -113,7 +93,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="4dp"
             android:gravity="center"
-            android:text="浏览"
+            android:text="@string/view"
             android:textColor="#B3B6BF"
             android:textSize="12sp"/>
     </LinearLayout>

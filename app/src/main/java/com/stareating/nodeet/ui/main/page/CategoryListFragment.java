@@ -1,44 +1,38 @@
-package com.stareating.nodeet;
+package com.stareating.nodeet.ui.main.page;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.stareating.nodeet.R;
 import com.stareating.nodeet.network.NodeBBService;
+import com.stareating.nodeet.network.api.Categories;
 import com.stareating.nodeet.network.api.CategoryApi;
+import com.stareating.nodeet.ui.common.Typefaces;
+import com.stareating.nodeet.ui.topic.TopicListActivity;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.stareating.nodeet.PostListActivity.CATEGORY_ID;
-import static com.stareating.nodeet.PostListActivity.CATEGORY_NAME;
+import static com.stareating.nodeet.ui.topic.TopicListActivity.CATEGORY_ID;
+import static com.stareating.nodeet.ui.topic.TopicListActivity.CATEGORY_NAME;
 
 /**
  * Created by Stardust on 2017/9/16.
@@ -46,17 +40,10 @@ import static com.stareating.nodeet.PostListActivity.CATEGORY_NAME;
 public class CategoryListFragment extends Fragment {
 
     private static final String LOG_TAG = "CategoryListFragment";
-    static Typeface TYPEFACE_ICON;
 
     private CategoryListAdapter mCategoryListAdapter = new CategoryListAdapter();
-    private List<Categories.CategoryItem> mCategories = new ArrayList<>();
+    private List<Categories.Category> mCategories = new ArrayList<>();
     private Retrofit mRetrofit = NodeBBService.getInstance().getRetrofit();
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
 
     @Nullable
     @Override
@@ -67,17 +54,9 @@ public class CategoryListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initIconTypeFaceIfNeeded();
         setUpCategoryList(view);
         fetchCategories();
 
-    }
-
-
-    private void initIconTypeFaceIfNeeded() {
-        if (TYPEFACE_ICON != null)
-            return;
-        TYPEFACE_ICON = Typeface.createFromAsset(getActivity().getAssets(), "fonts/fontawesome-webfont.ttf");
     }
 
     private void fetchCategories() {
@@ -89,7 +68,7 @@ public class CategoryListFragment extends Fragment {
                 .enqueue(new Callback<Categories>() {
                     @Override
                     public void onResponse(Call<Categories> call, retrofit2.Response<Categories> response) {
-                        mCategories = response.body().getCategoryItems();
+                        mCategories = response.body().getCategories();
                         mCategoryListAdapter.notifyDataSetChanged();
                     }
 
@@ -133,17 +112,17 @@ public class CategoryListFragment extends Fragment {
             super(itemView);
             //第一个参数是注解所在的对象。第二个参数是View。
             ButterKnife.bind(this, itemView);
-            icon.setTypeface(TYPEFACE_ICON);
+            icon.setTypeface(Typefaces.getAwesomeFont(getContext()));
             iconBackground = (GradientDrawable) icon.getBackground();
         }
 
         @OnClick(R.id.item)
         void showCategoryContent() {
             int pos = getAdapterPosition();
-            Categories.CategoryItem item = mCategories.get(pos);
-            startActivity(new Intent(getActivity(), PostListActivity.class)
-                    .putExtra(CATEGORY_ID, item.cid)
-                    .putExtra(CATEGORY_NAME, item.name));
+            Categories.Category item = mCategories.get(pos);
+            startActivity(new Intent(getActivity(), TopicListActivity.class)
+                    .putExtra(CATEGORY_ID, item.getCid())
+                    .putExtra(CATEGORY_NAME, item.getName()));
         }
     }
 
@@ -157,13 +136,13 @@ public class CategoryListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(CategoryViewHolder holder, int position) {
-            Categories.CategoryItem category = mCategories.get(position);
-            holder.name.setText(category.name);
-            holder.description.setText(category.description);
-            holder.topic_count.setText(String.valueOf(category.topic_count));
-            holder.post_count.setText(String.valueOf(category.post_count));
-            holder.iconBackground.setColor(Color.parseColor(category.bgColor));
-            holder.icon.setText(getCharForFontAwesome(category.icon));
+            Categories.Category category = mCategories.get(position);
+            holder.name.setText(category.getName());
+            holder.description.setText(category.getDescription());
+            holder.topic_count.setText(String.valueOf(category.getTopicCount()));
+            holder.post_count.setText(String.valueOf(category.getPostCount()));
+            holder.iconBackground.setColor(Color.parseColor(category.getBgColor()));
+            holder.icon.setText(getCharForFontAwesome(category.getIcon()));
         }
 
         @Override

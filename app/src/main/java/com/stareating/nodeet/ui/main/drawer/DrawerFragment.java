@@ -1,4 +1,4 @@
-package com.stareating.nodeet;
+package com.stareating.nodeet.ui.main.drawer;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.stareating.nodeet.R;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;

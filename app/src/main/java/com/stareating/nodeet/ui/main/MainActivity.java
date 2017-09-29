@@ -1,4 +1,4 @@
-package com.stareating.nodeet;
+package com.stareating.nodeet.ui.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +11,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.stareating.nodeet.R;
+import com.stareating.nodeet.ui.main.page.CategoryListFragment;
+import com.stareating.nodeet.ui.main.page.PopularFragment;
+import com.stareating.nodeet.ui.main.page.RecentFragment;
+import com.stareating.nodeet.widget.FragmentPagerAdapterBuilder;
+
 /**
  * Created by Stardust on 2017/9/14.
  */
@@ -19,9 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final String LOG_TAG = "MainActivity";
-
-    private TabLayout mTabLayout;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,39 +40,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpTabLayout() {
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-        final String[] titles = {"版块", "最新", "热门"};
 
-        viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
-
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return titles[position];
-            }
-
-            @Override
-            public int getCount() {
-                return 3;
-            }
-
-            @Override
-            public Fragment getItem(int position) {
-                switch (position) {
-                    case 0:
-                        return new CategoryListFragment();
-                    case 1:
-                        return new RecentFragment();
-                    case 2:
-                        return new PopularFragment();
-                    default:
-                        throw new IllegalArgumentException();
-                }
-            }
-        });
-
-        mTabLayout.setupWithViewPager(viewPager);
+        //這裡就可以重構了。儘管這樣寫還不算很複雜，但是太難看了
+        //我們用Builder模式來重構這段代碼。我們希望到達的效果是：
+        //嗯，看起来确实好看很多了。
+        viewPager.setAdapter(new FragmentPagerAdapterBuilder(getSupportFragmentManager())
+            .add(getString(R.string.category), new CategoryListFragment())
+            .add(getString(R.string.recent), new RecentFragment())
+            .add(getString(R.string.popular), new PopularFragment())
+            .build());
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void setUpToolbarWithDrawerLayout() {

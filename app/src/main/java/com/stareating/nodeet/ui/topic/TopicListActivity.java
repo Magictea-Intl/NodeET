@@ -1,44 +1,52 @@
-package com.stareating.nodeet;
+package com.stareating.nodeet.ui.topic;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+
+import com.stareating.nodeet.R;
 
 /**
  * Created by Stardust on 2017/9/14.
  */
 
-public class PostListActivity extends AppCompatActivity {
+public class TopicListActivity extends AppCompatActivity {
 
     //如何获取帖子列表：访问 http://39.108.231.37/api/category/cid
     //其中cid是对应板块的id
     public static final String CATEGORY_ID = "categoryId";
     public static final String CATEGORY_NAME = "categoryName";
-    private int cid;
-    private String categoryName;
+    private String mCategoryName;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        cid = getIntent().getIntExtra(CATEGORY_ID, -1);
-        categoryName = getIntent().getStringExtra(CATEGORY_NAME);
+        int cid = getIntent().getIntExtra(CATEGORY_ID, -1);
+        mCategoryName = getIntent().getStringExtra(CATEGORY_NAME);
         setContentView(R.layout.activity_post_list);
         setUpToolbar();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_post_list, PostListFragment.newInstance(String.valueOf(cid)))
+                .replace(R.id.fragment_post_list, TopicListFragment.newInstance(String.valueOf(cid)))
                 .commit();
     }
 
 
     private void setUpToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(categoryName);
+        toolbar.setTitle(mCategoryName);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ActionBar supportActionBar = getSupportActionBar();
+        if(supportActionBar != null){
+            //make Android Studio happy
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setDisplayShowHomeEnabled(true);
+            //因为他一直有一个黄色的警告说getSupportActionBar返回的结果可能为null。很烦，其实我们知道
+            //这个肯定不为null的（因为我们已经Set了)，所以为了让他不显示警告就加了判断了...
+        }
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

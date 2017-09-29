@@ -6,4 +6,10 @@
     <string name="settings">设置</string>
     <string name="exit">退出</string>
     <string name="fetch_failed">获取失败</string>
+    <string name="category">版块</string>
+    <string name="recent">最新</string>
+    <string name="popular">热门</string>
+    <string name="topic">主题</string>
+    <string name="post">帖子</string>
+    <string name="view">浏览</string>
 </resources>

@@ -37,7 +37,7 @@
 
     <fragment
         android:id="@+id/fragment_drawer"
-        android:name="com.stareating.nodeet.DrawerFragment_"
+        android:name="com.stareating.nodeet.ui.main.drawer.DrawerFragment_"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"/>
