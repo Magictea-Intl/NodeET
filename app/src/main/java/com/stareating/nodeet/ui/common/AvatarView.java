@@ -27,8 +27,8 @@ import butterknife.ButterKnife;
 
 public class AvatarView extends FrameLayout {
     
-    //你可能注意到了，有的变量是private的有的变量却没有加任何修饰。这是因为由于aa和butterknife的实现机制问题，
-    //使用这些注解不能用private。以后再去了解他的实现。
+    //有的变量没有加任何修饰。是由于aa和butterknife的实现机制问题，
+    //使用这些注解不能用private。
     @BindView(R.id.icon_text)
     TextView mIconText;
     
@@ -54,7 +54,6 @@ public class AvatarView extends FrameLayout {
     }
     
     private void init(){
-        //我們把它抽出來寫道一個xml里並調用inflate。。。這樣的話，這個AvatarView的內容就會是R.layout.avatar_view的內容了。
         inflate(getContext(), R.layout.avatar_view, this);
         ButterKnife.bind(this);
         mIconTextBackground = (GradientDrawable) mIconText.getBackground();
@@ -74,7 +73,7 @@ public class AvatarView extends FrameLayout {
                 @Override
                 public void run() {
                     final Drawable d = ImageLoader.loadUrl("http://www.autojs.org" + user.getPicture());
-                    //View.post和Activity.runOnUiThread是一样的
+                    //View.post和Activity.runOnUiThread一样
                     post(new Runnable() {
                         @Override
                         public void run() {

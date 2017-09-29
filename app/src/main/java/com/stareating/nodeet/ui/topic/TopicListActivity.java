@@ -44,8 +44,6 @@ public class TopicListActivity extends AppCompatActivity {
             //make Android Studio happy
             supportActionBar.setDisplayHomeAsUpEnabled(true);
             supportActionBar.setDisplayShowHomeEnabled(true);
-            //因为他一直有一个黄色的警告说getSupportActionBar返回的结果可能为null。很烦，其实我们知道
-            //这个肯定不为null的（因为我们已经Set了)，所以为了让他不显示警告就加了判断了...
         }
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

@@ -7,6 +7,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by 婷 on 2017/9/21.
  */
 
+
+//NodeBBService 网络层的对其他层的暴露的入口。主要是管理各种网络层的调用。
 public class NodeBBService {
 
 

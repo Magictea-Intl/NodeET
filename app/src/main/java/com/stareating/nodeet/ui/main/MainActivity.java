@@ -44,9 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
 
-        //這裡就可以重構了。儘管這樣寫還不算很複雜，但是太難看了
-        //我們用Builder模式來重構這段代碼。我們希望到達的效果是：
-        //嗯，看起来确实好看很多了。
+        //用Builder模式來重構代碼。
         viewPager.setAdapter(new FragmentPagerAdapterBuilder(getSupportFragmentManager())
             .add(getString(R.string.category), new CategoryListFragment())
             .add(getString(R.string.recent), new RecentFragment())

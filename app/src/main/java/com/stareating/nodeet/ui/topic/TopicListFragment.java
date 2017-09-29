@@ -116,12 +116,6 @@ public class TopicListFragment extends Fragment {
         recyclerView.setAdapter(mPostListAdapter);
     }
 
-    //这里有个问题。这个是主题列表。会显示用户的头像。可以预见的是，用户头像在以后的开发肯定会经常用到，
-    //而他的用户头像又比较复杂，可以是字也可以是图片。每次显示都要判断、改字体无疑很麻烦，所以我们干脆
-    //把用户头像写成一个自定义View。
-
-    //这是最后一个内容了哦
-
     class TopicViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.title)
