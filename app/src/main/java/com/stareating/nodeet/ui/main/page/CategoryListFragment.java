@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +22,11 @@ import com.stareating.nodeet.network.api.Categories;
 import com.stareating.nodeet.network.api.CategoryApi;
 import com.stareating.nodeet.ui.common.Typefaces;
 import com.stareating.nodeet.ui.topic.TopicListActivity;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,55 +44,61 @@ import static com.stareating.nodeet.ui.topic.TopicListActivity.CATEGORY_NAME;
 /**
  * Created by Stardust on 2017/9/16.
  */
+@EFragment(R.layout.fragment_category_list)
 public class CategoryListFragment extends Fragment {
 
     private static final String LOG_TAG = "CategoryListFragment";
+
+    @ViewById(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
+    @ViewById(R.id.category_list)
+    RecyclerView mCategoryListRecyclerView;
 
     private CategoryListAdapter mCategoryListAdapter = new CategoryListAdapter();
     private List<Categories.Category> mCategories = new ArrayList<>();
     private Retrofit mRetrofit = NodeBBService.getInstance().getRetrofit();
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_category_list, container, false);
-    }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setUpCategoryList(view);
+    @AfterViews
+    void setupViews() {
+        mSwipeRefreshLayout.setOnRefreshListener(this::fetchCategories);
+        setUpCategoryList();
         fetchCategories();
-
     }
 
     private void fetchCategories() {
         //网络访问等耗时操作不能在主线程(UI线程)中执行，否则会造成界面卡顿。
         //返回Call，异步执行并在获取后执行回调，不用开线程。
-
+        mSwipeRefreshLayout.setRefreshing(true);
         mRetrofit.create(CategoryApi.class)
                 .getCategories()
                 .enqueue(new Callback<Categories>() {
                     @Override
-                    public void onResponse(Call<Categories> call, retrofit2.Response<Categories> response) {
+                    public void onResponse(@NonNull Call<Categories> call, @NonNull retrofit2.Response<Categories> response) {
                         mCategories = response.body().getCategories();
                         mCategoryListAdapter.notifyDataSetChanged();
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
-                    public void onFailure(Call<Categories> call, Throwable t) {
+                    public void onFailure(@NonNull Call<Categories> call, @NonNull Throwable t) {
                         Toast.makeText(getContext(), R.string.fetch_failed, Toast.LENGTH_SHORT).show();
                         t.printStackTrace();
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
                 });
     }
 
 
-    private void setUpCategoryList(View view) {
-        RecyclerView categoryListView = (RecyclerView) view.findViewById(R.id.category_list);
-        categoryListView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        categoryListView.setAdapter(mCategoryListAdapter);
+    private void setUpCategoryList() {
+        mCategoryListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mCategoryListRecyclerView.setAdapter(mCategoryListAdapter);
+        mCategoryListRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext())
+                .colorResId(R.color.color_category_list_divider)
+                .sizeResId(R.dimen.size_category_list_divider)
+                .build());
     }
 
 

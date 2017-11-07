@@ -14,8 +14,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.stareating.nodeet.R;
 import com.stareating.nodeet.network.entity.User;
+import com.stareating.nodeet.util.Colors;
 import com.stareating.nodeet.util.ImageLoader;
 
 import butterknife.BindView;
@@ -26,18 +28,18 @@ import butterknife.ButterKnife;
  */
 
 public class AvatarView extends FrameLayout {
-    
+
     //有的变量没有加任何修饰。是由于aa和butterknife的实现机制问题，
     //使用这些注解不能用private。
     @BindView(R.id.icon_text)
     TextView mIconText;
-    
+
     @BindView(R.id.icon)
-    ImageView mIcon;
+    RoundedImageView mIcon;
 
     private GradientDrawable mIconTextBackground;
-    
-    
+
+
     public AvatarView(@NonNull Context context) {
         super(context);
         init();
@@ -52,36 +54,24 @@ public class AvatarView extends FrameLayout {
         super(context, attrs, defStyleAttr);
         init();
     }
-    
-    private void init(){
+
+    private void init() {
         inflate(getContext(), R.layout.avatar_view, this);
         ButterKnife.bind(this);
         mIconTextBackground = (GradientDrawable) mIconText.getBackground();
     }
-    
-    public void setAvatarOfUser(final User user){
+
+    public void setAvatarOfUser(final User user) {
+        mIcon.setCornerRadius(mIcon.getWidth() / 2);
         if (TextUtils.isEmpty(user.getPicture())) {
             mIcon.setVisibility(View.GONE);
             mIconText.setVisibility(View.VISIBLE);
-            mIconTextBackground.setColor(Color.parseColor(user.getIconBgColor()));
+            mIconTextBackground.setColor(Colors.parse(user.getIconBgColor()));
             mIconText.setText(user.getIconText());
-        }
-        else {
+        } else {
             mIcon.setVisibility(View.VISIBLE);
             mIconText.setVisibility(View.GONE);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    final Drawable d = ImageLoader.loadUrl("http://www.autojs.org" + user.getPicture());
-                    //View.post和Activity.runOnUiThread一样
-                    post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mIcon.setImageDrawable(d);
-                        }
-                    });
-                }
-            }).start();
+            ImageLoader.loadInto(mIcon, "http://www.autojs.org" + user.getPicture());
         }
     }
 }

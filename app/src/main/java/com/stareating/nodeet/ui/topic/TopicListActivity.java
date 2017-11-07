@@ -30,7 +30,9 @@ public class TopicListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post_list);
         setUpToolbar();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_post_list, TopicListFragment.newInstance(String.valueOf(cid)))
+                .replace(R.id.fragment_post_list, TopicListFragment_.builder()
+                        .arg(TopicListFragment.ARGUMENT_CID, String.valueOf(cid))
+                        .build())
                 .commit();
     }
 
@@ -40,17 +42,12 @@ public class TopicListActivity extends AppCompatActivity {
         toolbar.setTitle(mCategoryName);
         setSupportActionBar(toolbar);
         ActionBar supportActionBar = getSupportActionBar();
-        if(supportActionBar != null){
+        if (supportActionBar != null) {
             //make Android Studio happy
             supportActionBar.setDisplayHomeAsUpEnabled(true);
             supportActionBar.setDisplayShowHomeEnabled(true);
         }
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
     }
 
 }

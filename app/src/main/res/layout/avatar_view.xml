@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:app="http://schemas.android.com/apk/res-auto"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
@@ -7,8 +7,8 @@
 
     <TextView
         android:id="@+id/icon_text"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@drawable/category_icon_bg"
         android:gravity="center"
         android:textColor="#ffffff"
@@ -17,12 +17,12 @@
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:scaleType="fitCenter"
         android:visibility="gone"
         app:riv_corner_radius="25dp"
         app:riv_mutate_background="true"
         app:riv_oval="true"/>
 
-</FrameLayout>
+</merge>
