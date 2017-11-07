@@ -10,30 +10,32 @@
 * [x] 增加侧拉菜单, 上方头像、背景, 下方设置、退出 - Stardust
 * [x] 增加TabLayout, 各个Tab为"版块", "最新", "热门"  - Kikyo
 * [x] 完成"最新", "热门"的Tab对应的内容   - Stardust
-* [ ] 界面优化: 使界面更加美观 - Stardust
+* [x] 界面优化: 使界面更加丑观 - Stardust
 
 ## Refactor1
 
-* [ ] 分层。将界面和业务逻辑分开，整理好项目目录架构 - Stardust, Kikyo
-* [ ] 初步使用AA, ButterKnife 框架优化界面、控制层代码 - Stardust, Kikyo
-* [ ] 使用Retrofit框架代替丑陋的HttpUrlConnection对REST API的调用 - Stardust, Kikyo
-* [ ] 初步认识RxJava (Reative开发)(在此之前可能需要先补充一下函数式编程的基本思想) - Kikyo
+* [x] 分层。将界面和业务逻辑分开，整理好项目目录架构 - Stardust, Kikyo
+* [x] 初步使用AA, ButterKnife 框架优化界面、控制层代码 - Stardust, Kikyo
+* [x] 使用Retrofit框架代替丑陋的HttpUrlConnection对REST API的调用 - Stardust, Kikyo
 
 ## Version 0.2
 
 实现一个可以登录、可以浏览帖子内容的客户端。
 
-* [ ] 用户登录及其界面
-* [ ] 登录后头像、昵称的获取并显示在侧拉菜单中
-* [ ] 点击头像获取到用户的基本资料并显示
-* [ ] 增加侧拉菜单/设置的注销登录选项并实现
-* [ ] 点击主题显示帖子内容
-* [ ] 优化界面设计
+* [ ] 用户登录API - Stardust
+* [ ] 用户登录界面 - Kikyo
+* [ ] 登录后头像、昵称的获取并显示在侧拉菜单中 - Kikyo
+* [ ] 增加侧拉菜单的注销登录选项并实现 - Stardust
+* [ ] 点击头像获取到用户的基本资料并显示 - Kikyo
+* [ ] 帖子获取API - Kikyo
+* [ ] 点击主题显示帖子内容 - Stardust
+* [ ] 优化界面设计 - Stardust
 
 ## Refactor2
 
 * [ ] 使用图片加载库代替手工图片获取和加载(Glide, Passio等)
-* [ ] 广泛使用RxJava, AA, ButterKnife
+* [ ] 初步认识RxJava (在此之前可能需要先补充一下函数式编程的基本思想) - Kikyo
+* [ ] 广泛使用AA, ButterKnife
 * [ ] 参考其他客户端改进架构和代码(例如第三方微博客户端[WeiBo](https://github.com/wenmingvs/WeiBo))
 
 ## Version 0.3

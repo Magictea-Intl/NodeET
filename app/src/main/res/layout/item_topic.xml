@@ -72,6 +72,7 @@
             android:maxLines="4"
             android:textColor="#5D5D5D"
             android:textSize="14sp"
+            android:linksClickable="true"
             tools:text="公告 + 。。。"/>
 
         <LinearLayout
