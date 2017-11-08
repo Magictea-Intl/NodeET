@@ -1,13 +1,16 @@
 package com.stareating.nodeet.ui.login;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.stareating.nodeet.R;
+import com.stareating.nodeet.network.UserService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -26,20 +29,35 @@ public class LoginActivity extends AppCompatActivity {
 
     @ViewById(R.id.account_inputlayout)
     TextInputLayout accountTextInputLayout;
+
     @ViewById(R.id.password_inputlayout)
     TextInputLayout passwordTextInputLayout;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Click(R.id.login_btn)
-    void Login(){
-        if(checkIsOK()){
-            // TODO: 2017/11/8 登陆成功
-            Toast.makeText(LoginActivity.this, "LOGIN SUCCEED", Toast.LENGTH_SHORT).show();
+    void login() {
+        if (!checkIsOK()) {
+            return;
         }
+        UserService.getInstance(getApplication())
+                .login(accountTextInputLayout.getEditText().getText().toString(),
+                        passwordTextInputLayout.getEditText().getText().toString(),
+                        new UserService.LoginCallback() {
+                            @Override
+                            public void onSuccess() {
+                                Toast.makeText(getApplicationContext(), R.string.login_success, Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+
+                            @Override
+                            public void onError(String message) {
+                                if (message == null)
+                                    message = getString(R.string.login_fail);
+                                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
     }
 
     private boolean checkIsOK() {
@@ -47,15 +65,13 @@ public class LoginActivity extends AppCompatActivity {
         String ac = accountTextInputLayout.getEditText().getText().toString();
         String pw = passwordTextInputLayout.getEditText().getText().toString();
 
-        if(ac.length() == 0){
+        if (ac.length() == 0) {
             accountTextInputLayout.setError("账号不能为空");
             return false;
-        }
-        else if(pw.length() == 0){
+        } else if (pw.length() == 0) {
             passwordTextInputLayout.setError("密码不能为空");
             return false;
-        }
-        else{
+        } else {
             accountTextInputLayout.setErrorEnabled(false);
             passwordTextInputLayout.setErrorEnabled(false);
             return true;

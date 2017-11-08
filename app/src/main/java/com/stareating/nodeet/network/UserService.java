@@ -54,6 +54,7 @@ public class UserService {
                     @Override
                     public void onResponse(@NonNull Call<UserVerifyResult> call, @NonNull Response<UserVerifyResult> response) {
                         UserVerifyResult verifyResult = response.body();
+                        System.out.println(verifyResult);
                         if (verifyResult == null) {
                             callback.onError(null);
                             return;
@@ -107,4 +108,11 @@ public class UserService {
     public boolean isLoggedIn() {
         return mToken != null;
     }
+
+
+    public void logout() {
+        mToken = null;
+        mSharedPreferences.edit().remove(KEY_USER_TOKEN).apply();
+    }
+
 }

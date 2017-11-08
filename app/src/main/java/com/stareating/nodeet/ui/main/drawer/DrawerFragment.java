@@ -6,8 +6,10 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.stareating.nodeet.R;
+import com.stareating.nodeet.network.UserService;
 import com.stareating.nodeet.ui.login.LoginActivity_;
 
 import org.androidannotations.annotations.Click;
@@ -23,23 +25,36 @@ public class DrawerFragment extends Fragment {
 
     //因为这个Fragment比较简单，只用到Click的注解。这样子看起来其实代码行数差不多但是语义更清晰也看起来更简洁
 
+    private UserService mUserService;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mUserService = UserService.getInstance(getActivity().getApplication());
+    }
+
     @Click(R.id.exit)
-    void exit(){
+    void exit() {
         getActivity().finish();
     }
 
     @Click(R.id.settings)
-    void goToSettings(){
+    void goToSettings() {
         // TODO: 2017/9/16 跳转到设置
     }
 
     @Click(R.id.avatar)
-    void showUserDetail(){
-        LoginActivity_.intent(this).start();
+    void showUserDetail() {
+        if (mUserService.isLoggedIn()) {
+            mUserService.logout();
+            Toast.makeText(getActivity(), R.string.logout_success, Toast.LENGTH_SHORT).show();
+        } else {
+            LoginActivity_.intent(this).start();
+        }
     }
 
     @Click(R.id.header)
-    void setUpHeaderImage(){
+    void setUpHeaderImage() {
         // TODO: 2017/9/16 让用户设置背景图片
     }
 }
