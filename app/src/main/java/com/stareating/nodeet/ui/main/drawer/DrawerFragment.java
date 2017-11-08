@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stareating.nodeet.R;
+import com.stareating.nodeet.ui.login.LoginActivity_;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
@@ -34,7 +35,7 @@ public class DrawerFragment extends Fragment {
 
     @Click(R.id.avatar)
     void showUserDetail(){
-        // TODO: 2017/9/16 跳转到用户详情页
+        LoginActivity_.intent(this).start();
     }
 
     @Click(R.id.header)

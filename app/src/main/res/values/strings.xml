@@ -12,4 +12,8 @@
     <string name="topic">主题</string>
     <string name="post">帖子</string>
     <string name="view">浏览</string>
+    <string name="login">登录</string>
+    <string name="please_input_account">请输入账号</string>
+    <string name="please_input_password">请输入密码</string>
+    <string name="forget_password">忘记密码</string>
 </resources>

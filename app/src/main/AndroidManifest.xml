@@ -23,6 +23,7 @@
         </activity>
 
         <activity android:name=".ui.topic.TopicListActivity"/>
+        <activity android:name=".ui.login.LoginActivity_"/>
     </application>
 
 </manifest>

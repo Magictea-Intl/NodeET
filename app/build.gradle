@@ -6,7 +6,7 @@ android {
     buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.stareating.nodeet"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -39,8 +39,8 @@ dependencies {
     //RoundedImageView
     compile 'com.makeramen:roundedimageview:2.3.0'
     // Android Annotations
-    annotationProcessor "org.androidannotations:androidannotations:4.2.0"
-    compile "org.androidannotations:androidannotations-api:4.2.0"
+    annotationProcessor "org.androidannotations:androidannotations:4.3.1"
+    compile "org.androidannotations:androidannotations-api:4.3.1"
     // ButterKnife
     compile('com.jakewharton:butterknife:8.6.0', {
         exclude group: 'com.android.support'
