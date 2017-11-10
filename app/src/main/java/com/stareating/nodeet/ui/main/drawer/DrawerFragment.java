@@ -2,18 +2,32 @@ package com.stareating.nodeet.ui.main.drawer;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.stareating.nodeet.R;
+import com.stareating.nodeet.network.NodeBBService;
 import com.stareating.nodeet.network.UserService;
+import com.stareating.nodeet.network.api.UserApi;
+import com.stareating.nodeet.network.entity.User;
+import com.stareating.nodeet.ui.common.AvatarView;
 import com.stareating.nodeet.ui.login.LoginActivity_;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by Stardust on 2017/9/16.
@@ -30,7 +44,33 @@ public class DrawerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUserService = UserService.getInstance(getActivity().getApplication());
+        mUserService = UserService.getInstance();
+    }
+
+    @ViewById(R.id.username)
+    TextView userName;
+    @ViewById(R.id.avatar)
+    AvatarView mAvatarView;
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(mUserService.isLoggedIn()){
+            mUserService.me(new Callback<User>() {
+                @Override
+                public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                    User u = response.body();
+                    if(u == null){
+                        return;
+                    }
+                    userName.setText(u.getUsername());
+                    mAvatarView.setAvatarOfUser(u);
+                }
+                @Override
+                public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                }
+            });
+        }
     }
 
     @Click(R.id.exit)

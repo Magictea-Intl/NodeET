@@ -17,7 +17,7 @@
         android:layout_marginBottom="5dp"
         android:background="@drawable/muye">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <com.stareating.nodeet.ui.common.AvatarView
             android:id="@+id/avatar"
             android:layout_width="70dp"
             android:layout_height="70dp"
@@ -25,7 +25,6 @@
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="8dp"
             android:scaleType="fitXY"
-            android:src="@drawable/naruto_shippuden_collection_v2_by_neon_drane"
             app:riv_border_color="#77f2f3f5"
             app:riv_border_width="0.5dp"
             app:riv_corner_radius="40dp"/>

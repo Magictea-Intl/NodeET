@@ -20,8 +20,8 @@ import retrofit2.http.Path;
 public interface UserApi {
 
 
-    @GET("/api/me")
-    Call<User> me();
+    @GET("/api/v1/users/{uid}")
+    Call<User> getUser(@Path("uid") String uid);
 
     @FormUrlEncoded
     @POST("/api/ns/login")

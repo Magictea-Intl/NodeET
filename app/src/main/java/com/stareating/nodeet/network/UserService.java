@@ -1,6 +1,7 @@
 package com.stareating.nodeet.network;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 import com.stareating.nodeet.network.api.UserApi;
 import com.stareating.nodeet.network.common.CommonResponse;
 import com.stareating.nodeet.network.entity.Token;
+import com.stareating.nodeet.network.entity.User;
 import com.stareating.nodeet.network.entity.UserVerifyResult;
 
 import retrofit2.Call;
@@ -21,44 +23,48 @@ import retrofit2.Retrofit;
 
 public class UserService {
 
+
     public interface LoginCallback {
         void onSuccess();
 
         void onError(String message);
     }
 
+    private static final String KEY_USER_ID = UserService.class.getName() + ".user_id";
     private static final String KEY_USER_TOKEN = UserService.class.getName() + ".user_token";
 
     private static UserService sInstance;
-    private final Retrofit mRetrofit;
     private String mToken;
+    private String mUid;
     private SharedPreferences mSharedPreferences;
 
-    UserService(Application application) {
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(application);
-        mRetrofit = NodeBBService.getInstance().getRetrofit();
+    UserService(Context context) {
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         mToken = mSharedPreferences.getString(KEY_USER_TOKEN, null);
+        mUid = mSharedPreferences.getString(KEY_USER_ID, null);
     }
 
-    public static UserService getInstance(Application application) {
-        if (sInstance == null) {
-            sInstance = new UserService(application);
-        }
+    public static UserService getInstance() {
         return sInstance;
     }
 
+    public static void init(Context context){
+        if(sInstance != null)
+            throw new IllegalStateException("has been initialized");
+        sInstance = new UserService(context);
+    }
     public void login(String userName, final String password, LoginCallback callback) {
-        final UserApi userApi = mRetrofit.create(UserApi.class);
+        final UserApi userApi = NodeBBService.getInstance().getRetrofit().create(UserApi.class);
         userApi.verify(userName, password)
                 .enqueue(new Callback<UserVerifyResult>() {
                     @Override
                     public void onResponse(@NonNull Call<UserVerifyResult> call, @NonNull Response<UserVerifyResult> response) {
                         UserVerifyResult verifyResult = response.body();
-                        System.out.println(verifyResult);
                         if (verifyResult == null) {
                             callback.onError(null);
                             return;
                         }
+                        mUid = verifyResult.getUid();
                         userApi.generateToken(verifyResult.getUid(), password)
                                 .enqueue(new Callback<CommonResponse<Token>>() {
                                     @Override
@@ -82,7 +88,6 @@ public class UserService {
                                         callback.onError(t.getMessage());
                                     }
                                 });
-
                     }
 
                     @Override
@@ -94,10 +99,17 @@ public class UserService {
 
     }
 
+    public void me(Callback<User> callback){
+        NodeBBService.getInstance().getRetrofit().create(UserApi.class)
+                .getUser(mUid)
+                .enqueue(callback);
+    }
+
     private void onLoginSuccess(Token token) {
         mToken = token.getToken();
         mSharedPreferences.edit()
                 .putString(KEY_USER_TOKEN, mToken)
+                .putString(KEY_USER_ID, mUid)
                 .apply();
     }
 

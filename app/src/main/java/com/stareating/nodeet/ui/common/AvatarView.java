@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -59,10 +60,19 @@ public class AvatarView extends FrameLayout {
         inflate(getContext(), R.layout.avatar_view, this);
         ButterKnife.bind(this);
         mIconTextBackground = (GradientDrawable) mIconText.getBackground();
+        //圓形圖片的半徑需要設置為寬度的一半。
+        //而在init函數時無法獲取控件的寬度（此時控件還沒有測量）
+        //需要監聽控件佈局完成后才能獲取寬度并設置半徑
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mIcon.setCornerRadius(mIcon.getWidth() / 2);
+                getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
     }
 
     public void setAvatarOfUser(final User user) {
-        mIcon.setCornerRadius(mIcon.getWidth() / 2);
         if (TextUtils.isEmpty(user.getPicture())) {
             mIcon.setVisibility(View.GONE);
             mIconText.setVisibility(View.VISIBLE);

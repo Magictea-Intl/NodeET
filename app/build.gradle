@@ -6,7 +6,7 @@ android {
     buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.stareating.nodeet"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -51,4 +51,6 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     // RecyclerView-FlexibleDivider
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
+    // Eventbus
+    compile 'org.greenrobot:eventbus:3.0.0'
 }
