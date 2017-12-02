@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.stareating.nodeet.R;
 import com.stareating.nodeet.network.entity.Teaser;
 import com.stareating.nodeet.network.entity.Topic;
-import com.stareating.nodeet.network.entity.Topics;
 import com.stareating.nodeet.ui.common.AvatarView;
 
 import java.text.DateFormat;
@@ -28,34 +27,6 @@ import butterknife.ButterKnife;
 
 public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.TopicViewHolder> {
 
-    class TopicViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.title)
-        TextView title;
-
-        @BindView(R.id.content)
-        TextView content;
-
-        @BindView(R.id.view_count)
-        TextView view_count;
-
-        @BindView(R.id.post_count)
-        TextView post_count;
-
-        @BindView(R.id.time)
-        TextView time;
-
-        @BindView(R.id.username)
-        TextView userName;
-
-        @BindView(R.id.avatar)
-        AvatarView avatarView;
-
-        public TopicViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
 
     private static final DateFormat DATE_FORMAT = SimpleDateFormat.getDateTimeInstance();
 
@@ -90,5 +61,42 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.Topi
     @Override
     public int getItemCount() {
         return mTopics == null ? 0 : mTopics.size();
+    }
+
+    class TopicViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.title)
+        TextView title;
+
+        @BindView(R.id.content)
+        TextView content;
+
+        @BindView(R.id.like_count)
+        TextView view_count;
+
+        @BindView(R.id.post_count)
+        TextView post_count;
+
+        @BindView(R.id.time)
+        TextView time;
+
+        @BindView(R.id.username)
+        TextView userName;
+
+        @BindView(R.id.avatar)
+        AvatarView avatarView;
+
+        public TopicViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(v -> {
+                int pos = getAdapterPosition();
+                Topic topic = mTopics.get(pos);
+                TopicActivity_.intent(itemView.getContext())
+                        .extra(TopicActivity.EXTRA_TID, topic.getTid())
+                        .extra(TopicActivity.EXTRA_TITLE, topic.getTitle())
+                        .start();
+            });
+        }
     }
 }

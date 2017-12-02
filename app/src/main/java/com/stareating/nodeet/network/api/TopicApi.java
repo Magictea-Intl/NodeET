@@ -1,5 +1,6 @@
 package com.stareating.nodeet.network.api;
 
+import com.stareating.nodeet.network.entity.Topic;
 import com.stareating.nodeet.network.entity.Topics;
 
 import retrofit2.Call;
@@ -22,5 +23,8 @@ public interface TopicApi {
     //@Path("cid")表示这个参数,会填充到路径{cid}的位置
     @GET("api/category/{cid}")
     Call<Topics> getTopicsForCategory(@Path("cid") String cid);
+
+    @GET("api/topic/{tid}")
+    Call<Topic> getTopic(@Path("tid") String tid);
 
 }

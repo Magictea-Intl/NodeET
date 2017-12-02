@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.stareating.nodeet.R;
 
@@ -27,7 +26,7 @@ public class TopicListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         int cid = getIntent().getIntExtra(CATEGORY_ID, -1);
         mCategoryName = getIntent().getStringExtra(CATEGORY_NAME);
-        setContentView(R.layout.activity_post_list);
+        setContentView(R.layout.activity_topic_list);
         setUpToolbar();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_post_list, TopicListFragment_.builder()

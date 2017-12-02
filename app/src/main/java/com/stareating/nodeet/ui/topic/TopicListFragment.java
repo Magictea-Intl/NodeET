@@ -43,6 +43,7 @@ public class TopicListFragment extends Fragment {
 
     @ViewById(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
+
     @ViewById(R.id.topic_list)
     RecyclerView mTopicListRecyclerView;
 

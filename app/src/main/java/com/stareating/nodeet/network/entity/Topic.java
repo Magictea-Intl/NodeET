@@ -2,6 +2,7 @@
 package com.stareating.nodeet.network.entity;
 
 import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
 
 //@Generated("net.hexar.json2pojo")
@@ -63,6 +64,8 @@ public class Topic {
     private User mUser;
     @SerializedName("viewcount")
     private String mViewcount;
+    @SerializedName("posts")
+    private List<Post> mPosts;
 
     public Object getBookmark() {
         return mBookmark;
@@ -288,4 +291,11 @@ public class Topic {
         mViewcount = viewcount;
     }
 
+    public List<Post> getPosts() {
+        return mPosts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        mPosts = posts;
+    }
 }

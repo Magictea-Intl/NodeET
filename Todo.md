@@ -22,13 +22,13 @@
 
 实现一个可以登录、可以浏览帖子内容的客户端。
 
-* [ ] 用户登录API - Stardust
-* [ ] 用户登录界面 - Kikyo
-* [ ] 登录后头像、昵称的获取并显示在侧拉菜单中 - Kikyo
-* [ ] 增加侧拉菜单的注销登录选项并实现 - Stardust
+* [x] 用户登录API - Stardust
+* [x] 用户登录界面 - Kikyo
+* [x] 登录后头像、昵称的获取并显示在侧拉菜单中 - Kikyo
+* [x] 增加侧拉菜单的注销登录选项并实现 - Stardust
 * [ ] 点击头像获取到用户的基本资料并显示 - Kikyo
-* [ ] 帖子获取API - Kikyo
-* [ ] 点击主题显示帖子内容 - Stardust
+* [x] 帖子获取API - Kikyo
+* [x] 点击主题显示帖子内容 - Stardust
 * [ ] 优化界面设计 - Stardust
 
 ## Refactor2
