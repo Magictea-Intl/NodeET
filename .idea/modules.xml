@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/NodeET.iml" filepath="$PROJECT_DIR$/NodeET.iml" />
       <module fileurl="file://D:\androidProject\NodeET2\NodeET.iml" filepath="D:\androidProject\NodeET2\NodeET.iml" />
+      <module fileurl="file://$PROJECT_DIR$/NodeET2.iml" filepath="$PROJECT_DIR$/NodeET2.iml" />
       <module fileurl="file://C:\Users\Stardust\Documents\AndroidProjects\NodeET\NodeET2.iml" filepath="C:\Users\Stardust\Documents\AndroidProjects\NodeET\NodeET2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

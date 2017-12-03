@@ -16,13 +16,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NodeBBService {
 
 
+    private static final String BASE_URL = "http://www.autojs.org";
+
     private static  NodeBBService sInstance;
     private Retrofit mRetrofit;
     private UserService mUserService;
 
     private NodeBBService(Context context){
         mRetrofit = new Retrofit.Builder()
-                .baseUrl("http://www.autojs.org/")
+                .baseUrl(BASE_URL + "/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
@@ -58,5 +60,12 @@ public class NodeBBService {
 
     public UserService getUserService() {
         return mUserService;
+    }
+
+    public static String url(String relativeUrl) {
+        if(relativeUrl.endsWith("/")){
+            return BASE_URL + relativeUrl;
+        }
+        return BASE_URL + "/" + relativeUrl;
     }
 }

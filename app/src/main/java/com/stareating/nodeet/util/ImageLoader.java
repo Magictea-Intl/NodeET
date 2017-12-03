@@ -1,6 +1,7 @@
 package com.stareating.nodeet.util;
 
 import android.graphics.drawable.Drawable;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.io.InputStream;
@@ -28,6 +29,13 @@ public class ImageLoader {
         new Thread(() -> {
             Drawable d = loadUrl(url);
             imageView.post(() -> imageView.setImageDrawable(d));
+        }).start();
+    }
+
+    public static void loadIntoBackground(View view, String url) {
+        new Thread(() -> {
+            Drawable d = loadUrl(url);
+           view.post(() -> view.setBackground(d));
         }).start();
     }
 }

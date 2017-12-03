@@ -1,6 +1,7 @@
 package com.stareating.nodeet.ui.main.drawer;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +20,9 @@ import com.stareating.nodeet.network.api.UserApi;
 import com.stareating.nodeet.network.entity.User;
 import com.stareating.nodeet.ui.common.AvatarView;
 import com.stareating.nodeet.ui.login.LoginActivity_;
+import com.stareating.nodeet.ui.user.UserProfileActivity;
+import com.stareating.nodeet.ui.user.UserProfileActivity_;
+import com.stareating.nodeet.util.ImageLoader;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
@@ -51,6 +55,8 @@ public class DrawerFragment extends Fragment {
     TextView userName;
     @ViewById(R.id.avatar)
     AvatarView mAvatarView;
+    @ViewById(R.id.header)
+    View mHeaderView;
 
     @Override
     public void onResume(){
@@ -65,6 +71,7 @@ public class DrawerFragment extends Fragment {
                     }
                     userName.setText(u.getUsername());
                     mAvatarView.setAvatarOfUser(u);
+                    ImageLoader.loadIntoBackground(mHeaderView, NodeBBService.url(u.getCoverUrl()));
                 }
                 @Override
                 public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
@@ -86,8 +93,9 @@ public class DrawerFragment extends Fragment {
     @Click(R.id.avatar)
     void showUserDetail() {
         if (mUserService.isLoggedIn()) {
-            mUserService.logout();
-            Toast.makeText(getActivity(), R.string.logout_success, Toast.LENGTH_SHORT).show();
+            //mUserService.logout();
+            //Toast.makeText(getActivity(), R.string.logout_success, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getActivity(), UserProfileActivity_.class));
         } else {
             LoginActivity_.intent(this).start();
         }
