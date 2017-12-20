@@ -6,6 +6,7 @@ import com.stareating.nodeet.network.entity.Token;
 import com.stareating.nodeet.network.entity.User;
 import com.stareating.nodeet.network.entity.UserVerifyResult;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -21,14 +22,14 @@ public interface UserApi {
 
 
     @GET("/api/v1/users/{uid}")
-    Call<User> getUser(@Path("uid") String uid);
+    Observable<User> getUser(@Path("uid") String uid);
 
     @FormUrlEncoded
     @POST("/api/ns/login")
-    Call<UserVerifyResult> verify(@Field("username") String userName, @Field("password") String password);
+    Observable<UserVerifyResult> verify(@Field("username") String userName, @Field("password") String password);
 
 
     @FormUrlEncoded
     @POST("/api/v2/users/{uid}/tokens")
-    Call<CommonResponse<Token>> generateToken(@Path("uid") String uid, @Field("password") String password);
+    Observable<CommonResponse<Token>> generateToken(@Path("uid") String uid, @Field("password") String password);
 }

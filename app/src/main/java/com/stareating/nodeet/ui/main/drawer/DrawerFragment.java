@@ -2,6 +2,7 @@ package com.stareating.nodeet.ui.main.drawer;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,8 +13,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.stareating.nodeet.R;
+import com.stareating.nodeet.imageloading.GlideApp;
 import com.stareating.nodeet.network.NodeBBService;
 import com.stareating.nodeet.network.UserService;
 import com.stareating.nodeet.network.api.UserApi;
@@ -22,12 +28,15 @@ import com.stareating.nodeet.ui.common.AvatarView;
 import com.stareating.nodeet.ui.login.LoginActivity_;
 import com.stareating.nodeet.ui.user.UserProfileActivity;
 import com.stareating.nodeet.ui.user.UserProfileActivity_;
-import com.stareating.nodeet.util.ImageLoader;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -62,21 +71,21 @@ public class DrawerFragment extends Fragment {
     public void onResume(){
         super.onResume();
         if(mUserService.isLoggedIn()){
-            mUserService.me(new Callback<User>() {
-                @Override
-                public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-                    User u = response.body();
-                    if(u == null){
-                        return;
-                    }
-                    userName.setText(u.getUsername());
-                    mAvatarView.setAvatarOfUser(u);
-                    ImageLoader.loadIntoBackground(mHeaderView, NodeBBService.url(u.getCoverUrl()));
-                }
-                @Override
-                public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                }
-            });
+            mUserService.me()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(u -> {
+                        userName.setText(u.getUsername());
+                        mAvatarView.setAvatarOfUser(u);
+                        GlideApp.with(this)
+                            .load(NodeBBService.url(u.getCoverUrl()))
+                            .into(new SimpleTarget<Drawable>() {
+                                @Override
+                                public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                                    mHeaderView.setBackground(resource);
+                                }
+                            });
+                    });
         }
     }
 

@@ -1,34 +1,23 @@
 package com.stareating.nodeet.network;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 
 import com.stareating.nodeet.network.api.UserApi;
 import com.stareating.nodeet.network.common.CommonResponse;
 import com.stareating.nodeet.network.entity.Token;
 import com.stareating.nodeet.network.entity.User;
-import com.stareating.nodeet.network.entity.UserVerifyResult;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Stardust on 2017/11/8.
  */
 
 public class UserService {
-
-
-    public interface LoginCallback {
-        void onSuccess();
-
-        void onError(String message);
-    }
 
     private static final String KEY_USER_ID = UserService.class.getName() + ".user_id";
     private static final String KEY_USER_TOKEN = UserService.class.getName() + ".user_token";
@@ -53,56 +42,20 @@ public class UserService {
             throw new IllegalStateException("has been initialized");
         sInstance = new UserService(context);
     }
-    public void login(String userName, final String password, LoginCallback callback) {
+    public Observable<CommonResponse<Token>> login(String userName, final String password) {
         final UserApi userApi = NodeBBService.getInstance().getRetrofit().create(UserApi.class);
-        userApi.verify(userName, password)
-                .enqueue(new Callback<UserVerifyResult>() {
-                    @Override
-                    public void onResponse(@NonNull Call<UserVerifyResult> call, @NonNull Response<UserVerifyResult> response) {
-                        UserVerifyResult verifyResult = response.body();
-                        if (verifyResult == null) {
-                            callback.onError(null);
-                            return;
-                        }
-                        mUid = verifyResult.getUid();
-                        userApi.generateToken(verifyResult.getUid(), password)
-                                .enqueue(new Callback<CommonResponse<Token>>() {
-                                    @Override
-                                    public void onResponse(@NonNull Call<CommonResponse<Token>> call, @NonNull Response<CommonResponse<Token>> response) {
-                                        CommonResponse<Token> tokenResponse = response.body();
-                                        if (tokenResponse == null) {
-                                            callback.onError(null);
-                                            return;
-                                        }
-                                        if (!tokenResponse.getCode().equals("ok")) {
-                                            callback.onError(tokenResponse.getCode());
-                                            return;
-                                        }
-                                        callback.onSuccess();
-                                        onLoginSuccess(tokenResponse.getPayload());
-                                    }
-
-                                    @Override
-                                    public void onFailure(@NonNull Call<CommonResponse<Token>> call, @NonNull Throwable t) {
-                                        t.printStackTrace();
-                                        callback.onError(t.getMessage());
-                                    }
-                                });
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<UserVerifyResult> call, @NonNull Throwable t) {
-                        t.printStackTrace();
-                        callback.onError(t.getMessage());
-                    }
-                });
-
+        Observable<CommonResponse<Token>> tokenObserale = userApi.verify(userName, password)
+                .subscribeOn(Schedulers.io())
+                .map(result -> result.getUid())
+                .flatMap(uid -> userApi.generateToken(uid, password))
+                .observeOn(AndroidSchedulers.mainThread());
+        tokenObserale.subscribe(token -> onLoginSuccess(token.getPayload()));
+        return tokenObserale;
     }
 
-    public void me(Callback<User> callback){
-        NodeBBService.getInstance().getRetrofit().create(UserApi.class)
-                .getUser(mUid)
-                .enqueue(callback);
+    public Observable<User> me(){
+       return NodeBBService.getInstance().getRetrofit().create(UserApi.class)
+                .getUser(mUid);
     }
 
     private void onLoginSuccess(Token token) {

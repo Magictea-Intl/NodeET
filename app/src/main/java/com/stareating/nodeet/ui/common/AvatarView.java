@@ -15,11 +15,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.stareating.nodeet.R;
 import com.stareating.nodeet.network.entity.User;
 import com.stareating.nodeet.util.Colors;
-import com.stareating.nodeet.util.ImageLoader;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,6 +57,7 @@ public class AvatarView extends FrameLayout {
     }
 
     private void init() {
+        /*
         inflate(getContext(), R.layout.avatar_view, this);
         ButterKnife.bind(this);
         mIconTextBackground = (GradientDrawable) mIconText.getBackground();
@@ -70,9 +71,11 @@ public class AvatarView extends FrameLayout {
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+        */
     }
 
     public void setAvatarOfUser(final User user) {
+        /*
         if (TextUtils.isEmpty(user.getPicture())) {
             mIcon.setVisibility(View.GONE);
             mIconText.setVisibility(View.VISIBLE);
@@ -81,8 +84,11 @@ public class AvatarView extends FrameLayout {
         } else {
             mIcon.setVisibility(View.VISIBLE);
             mIconText.setVisibility(View.GONE);
-            ImageLoader.loadInto(mIcon, "http://www.autojs.org" + user.getPicture());
+            Glide.with(this)
+                    .load("http://www.autojs.org" + user.getPicture())
+                    .into(mIcon);
         }
+        */
     }
 }
 

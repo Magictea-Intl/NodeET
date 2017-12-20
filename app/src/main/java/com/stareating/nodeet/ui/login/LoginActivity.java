@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.stareating.nodeet.R;
 import com.stareating.nodeet.network.UserService;
+import com.stareating.nodeet.network.common.CommonResponse;
+import com.stareating.nodeet.network.entity.Token;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -19,6 +21,8 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.TextChange;
 import org.androidannotations.annotations.ViewById;
 import org.w3c.dom.Text;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by 婷 on 2017/11/8.
@@ -47,22 +51,18 @@ public class LoginActivity extends AppCompatActivity {
         }
         UserService.getInstance()
                 .login(accountTextInputLayout.getEditText().getText().toString(),
-                        passwordTextInputLayout.getEditText().getText().toString(),
-                        new UserService.LoginCallback() {
-                            @Override
-                            public void onSuccess() {
-                                Toast.makeText(getApplicationContext(), R.string.login_success, Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
+                        passwordTextInputLayout.getEditText().getText().toString())
+                    .doOnError(error -> {
+                        String message = error.getMessage();
+                        if (message == null)
+                            message = getString(R.string.login_fail);
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 
-                            @Override
-                            public void onError(String message) {
-                                if (message == null)
-                                    message = getString(R.string.login_fail);
-                                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
+                    })
+                    .subscribe(tokenCommonResponse -> {
+                        Toast.makeText(getApplicationContext(), R.string.login_success, Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
 
     }
 

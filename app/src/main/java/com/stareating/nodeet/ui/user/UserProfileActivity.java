@@ -1,5 +1,6 @@
 package com.stareating.nodeet.ui.user;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,17 +8,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.stareating.nodeet.R;
+import com.stareating.nodeet.imageloading.GlideApp;
 import com.stareating.nodeet.network.NodeBBService;
 import com.stareating.nodeet.network.UserService;
 import com.stareating.nodeet.network.entity.User;
 import com.stareating.nodeet.ui.common.AvatarView;
 import com.stareating.nodeet.util.DateTimeFormatter;
-import com.stareating.nodeet.util.ImageLoader;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,29 +71,29 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void getUserProfile() {
-        mUserService.me(new Callback<User>() {
-            @Override
-            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-                User u = response.body();
-                if(u == null){
-                    return;
-                }
-                mUserName.setText(u.getUsername());
-                mAvatarView.setAvatarOfUser(u);
-                mReputation.setText(u.getReputation());
-                mPost.setText(u.getPostcount());
-                mFollowing.setText(String.valueOf(u.getFollowingCount()));
-                mFollower.setText(String.valueOf(u.getFollowerCount()));
-                mLoginTime.setText(DateTimeFormatter.format(Long.parseLong(u.getLastonline())));
-                mRegTime.setText(DateTimeFormatter.format(Long.parseLong(u.getJoindate())));
-                mProfileViews.setText(u.getProfileviews());
-                mEmail.setText(u.getEmail());
-                ImageLoader.loadIntoBackground(mHeaderView, NodeBBService.url(u.getCoverUrl()));
-            }
-            @Override
-            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-            }
-        });
+        mUserService.me()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(u -> {
+                            mUserName.setText(u.getUsername());
+                            mAvatarView.setAvatarOfUser(u);
+                            mReputation.setText(u.getReputation());
+                            mPost.setText(u.getPostcount());
+                            mFollowing.setText(String.valueOf(u.getFollowingCount()));
+                            mFollower.setText(String.valueOf(u.getFollowerCount()));
+                            mLoginTime.setText(DateTimeFormatter.format(Long.parseLong(u.getLastonline())));
+                            mRegTime.setText(DateTimeFormatter.format(Long.parseLong(u.getJoindate())));
+                            mProfileViews.setText(u.getProfileviews());
+                            mEmail.setText(u.getEmail());
+                            GlideApp.with(UserProfileActivity.this)
+                                    .load(NodeBBService.url(u.getCoverUrl()))
+                                    .into(new SimpleTarget<Drawable>() {
+                                        @Override
+                                        public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                                            mHeaderView.setBackground(resource);
+                                        }
+                                    });
+                        });
     }
 
 }

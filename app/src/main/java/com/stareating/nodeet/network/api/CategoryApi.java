@@ -1,5 +1,6 @@
 package com.stareating.nodeet.network.api;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
@@ -10,5 +11,5 @@ import retrofit2.http.GET;
 public interface CategoryApi {
 
     @GET("api/categories")
-    Call<Categories> getCategories();
+    Observable<Categories> getCategories();
 }

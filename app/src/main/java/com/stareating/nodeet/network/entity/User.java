@@ -107,8 +107,6 @@ public class User {
     private String mReputation;
     @SerializedName("reputation:disabled")
     private Boolean mReputationDisabled;
-    @SerializedName("showHidden")
-    private Boolean mShowHidden;
     @SerializedName("signature")
     private String mSignature;
     @SerializedName("sso")
@@ -540,14 +538,6 @@ public class User {
 
     public void setReputationDisabled(Boolean reputationDisabled) {
         mReputationDisabled = reputationDisabled;
-    }
-
-    public Boolean getShowHidden() {
-        return mShowHidden;
-    }
-
-    public void setShowHidden(Boolean showHidden) {
-        mShowHidden = showHidden;
     }
 
     public String getSignature() {

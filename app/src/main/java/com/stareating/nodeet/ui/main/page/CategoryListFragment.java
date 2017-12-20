@@ -34,6 +34,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -73,20 +75,16 @@ public class CategoryListFragment extends Fragment {
         mSwipeRefreshLayout.setRefreshing(true);
         mRetrofit.create(CategoryApi.class)
                 .getCategories()
-                .enqueue(new Callback<Categories>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Categories> call, @NonNull retrofit2.Response<Categories> response) {
-                        mCategories = response.body().getCategories();
-                        mCategoryListAdapter.notifyDataSetChanged();
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<Categories> call, @NonNull Throwable t) {
-                        Toast.makeText(getContext(), R.string.fetch_failed, Toast.LENGTH_SHORT).show();
-                        t.printStackTrace();
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(categories -> {
+                    mCategories = categories.getCategories();
+                    mCategoryListAdapter.notifyDataSetChanged();
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }, error -> {
+                    Toast.makeText(getContext(), R.string.fetch_failed, Toast.LENGTH_SHORT).show();
+                    error.printStackTrace();
+                    mSwipeRefreshLayout.setRefreshing(false);
 
                 });
     }
