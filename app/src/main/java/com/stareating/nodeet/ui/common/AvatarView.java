@@ -85,7 +85,7 @@ public class AvatarView extends FrameLayout {
             mIcon.setVisibility(View.VISIBLE);
             mIconText.setVisibility(View.GONE);
             Glide.with(this)
-                    .load("http://www.autojs.org" + user.getPicture())
+                    .load("https://magictea.cc" + user.getPicture())
                     .into(mIcon);
         }
         */

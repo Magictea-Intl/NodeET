@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NodeBBService {
 
 
-    private static final String BASE_URL = "http://www.autojs.org";
+    private static final String BASE_URL = "https://magictea.cc";
 
     private static  NodeBBService sInstance;
     private Retrofit mRetrofit;
