@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 /**
  * Created by 婷 on 2017/9/21.
@@ -25,6 +26,7 @@ public class NodeBBService {
     private NodeBBService(Context context){
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL + "/")
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(new OkHttpClient.Builder()
                 .addInterceptor(chain -> {

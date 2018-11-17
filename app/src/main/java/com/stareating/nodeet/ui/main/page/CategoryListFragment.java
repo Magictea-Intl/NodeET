@@ -73,7 +73,6 @@ public class CategoryListFragment extends Fragment {
         //网络访问等耗时操作不能在主线程(UI线程)中执行，否则会造成界面卡顿。
         //返回Call，异步执行并在获取后执行回调，不用开线程。
         mSwipeRefreshLayout.setRefreshing(true);
-        // TODO 此处会crash 需要修复
         mRetrofit.create(CategoryApi.class)
                 .getCategories()
                 .subscribeOn(Schedulers.io())

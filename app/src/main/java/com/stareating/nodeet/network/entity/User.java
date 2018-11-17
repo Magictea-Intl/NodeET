@@ -10,7 +10,7 @@ public class User {
     @SerializedName("age")
     private Long mAge;
     @SerializedName("banned")
-    private Boolean mBanned;
+    private Integer mBanned;
     @SerializedName("birthday")
     private String mBirthday;
     @SerializedName("bodyClass")
@@ -148,11 +148,11 @@ public class User {
         mAge = age;
     }
 
-    public Boolean getBanned() {
+    public Integer getBanned() {
         return mBanned;
     }
 
-    public void setBanned(Boolean banned) {
+    public void setBanned(Integer banned) {
         mBanned = banned;
     }
 

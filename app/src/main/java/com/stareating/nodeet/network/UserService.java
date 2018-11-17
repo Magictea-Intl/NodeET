@@ -8,6 +8,7 @@ import com.stareating.nodeet.network.api.UserApi;
 import com.stareating.nodeet.network.common.CommonResponse;
 import com.stareating.nodeet.network.entity.Token;
 import com.stareating.nodeet.network.entity.User;
+import com.stareating.nodeet.network.entity.UserVerifyResult;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -46,7 +47,7 @@ public class UserService {
         final UserApi userApi = NodeBBService.getInstance().getRetrofit().create(UserApi.class);
         Observable<CommonResponse<Token>> tokenObserale = userApi.verify(userName, password)
                 .subscribeOn(Schedulers.io())
-                .map(result -> result.getUid())
+                .map(UserVerifyResult::getUid)
                 .flatMap(uid -> userApi.generateToken(uid, password))
                 .observeOn(AndroidSchedulers.mainThread());
         tokenObserale.subscribe(token -> onLoginSuccess(token.getPayload()));
